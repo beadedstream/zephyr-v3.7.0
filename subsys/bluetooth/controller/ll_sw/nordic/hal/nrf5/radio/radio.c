@@ -1905,7 +1905,7 @@ static void *radio_ccm_ext_rx_pkt_set(struct ccm *cnf, uint8_t phy, uint8_t pdu_
 	NRF_CCM->SCRATCHPTR = (uint32_t)_ccm_scratch;
 	NRF_CCM->SHORTS = 0;
 	nrf_ccm_event_clear(NRF_CCM, NRF_CCM_EVENT_ENDKSGEN);
-	nrf_ccm_event_clear(NRF_CCM, NRF_CCM_EVENT_ENDCRYPT);
+	nrf_ccm_event_clear(NRF_CCM, NRF_CCM_EVENT_END);
 	nrf_ccm_event_clear(NRF_CCM, NRF_CCM_EVENT_ERROR);
 
 	nrf_ccm_task_trigger(NRF_CCM, NRF_CCM_TASK_KSGEN);
@@ -1980,7 +1980,7 @@ static void *radio_ccm_ext_tx_pkt_set(struct ccm *cnf, uint8_t pdu_type, void *p
 	NRF_CCM->SCRATCHPTR = (uint32_t)_ccm_scratch;
 	NRF_CCM->SHORTS = CCM_SHORTS_ENDKSGEN_CRYPT_Msk;
 	nrf_ccm_event_clear(NRF_CCM, NRF_CCM_EVENT_ENDKSGEN);
-	nrf_ccm_event_clear(NRF_CCM, NRF_CCM_EVENT_ENDCRYPT);
+	nrf_ccm_event_clear(NRF_CCM, NRF_CCM_EVENT_END);
 	nrf_ccm_event_clear(NRF_CCM, NRF_CCM_EVENT_ERROR);
 
 	nrf_ccm_task_trigger(NRF_CCM, NRF_CCM_TASK_KSGEN);
@@ -2001,11 +2001,11 @@ void *radio_ccm_iso_tx_pkt_set(struct ccm *cnf, uint8_t pdu_type, void *pkt)
 
 uint32_t radio_ccm_is_done(void)
 {
-	nrf_ccm_int_enable(NRF_CCM, CCM_INTENSET_ENDCRYPT_Msk);
+	nrf_ccm_int_enable(NRF_CCM, NRF_CCM_INT_END_MASK);
 	while (NRF_CCM->EVENTS_ENDCRYPT == 0) {
 		cpu_sleep();
 	}
-	nrf_ccm_int_disable(NRF_CCM, CCM_INTENCLR_ENDCRYPT_Msk);
+	nrf_ccm_int_disable(NRF_CCM, NRF_CCM_INT_END_MASK);
 	NVIC_ClearPendingIRQ(nrfx_get_irq_number(NRF_CCM));
 
 	return (NRF_CCM->EVENTS_ERROR == 0);

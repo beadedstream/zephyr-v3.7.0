@@ -39,3 +39,8 @@ properties:
 
   pinctrl-0:
     required: true
+
+  beadedstream,qspi-csn-scan:
+    type: array
+    required: false
+    description: Optional list of alternate chip-select pins to probe during init.

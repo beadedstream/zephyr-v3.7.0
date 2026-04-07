@@ -523,20 +523,32 @@ static int start_read(const struct device *dev,
 			 * is not used (hence, the multiple channel sampling is
 			 * possible), the burst mode have to be deactivated.
 			 */
-			nrf_saadc_burst_set(NRF_SAADC, channel_id,
+#if defined(NRF_SAADC_HAS_CH_BURST)
+			nrf_saadc_channel_burst_set(
+				NRF_SAADC,
+				channel_id,
 				(sequence->oversampling != 0U ?
 					NRF_SAADC_BURST_ENABLED :
 					NRF_SAADC_BURST_DISABLED));
+#elif defined(NRF_SAADC_HAS_BURST)
+			nrf_saadc_burst_set(NRF_SAADC,
+					    (sequence->oversampling != 0U ?
+					     NRF_SAADC_BURST_ENABLED :
+					     NRF_SAADC_BURST_DISABLED));
+#endif
 			nrf_saadc_channel_pos_input_set(
 				NRF_SAADC,
 				channel_id,
 				m_data.positive_inputs[channel_id]);
 			++active_channels;
 		} else {
-			nrf_saadc_burst_set(
-				NRF_SAADC,
-				channel_id,
-				NRF_SAADC_BURST_DISABLED);
+#if defined(NRF_SAADC_HAS_CH_BURST)
+			nrf_saadc_channel_burst_set(NRF_SAADC, channel_id,
+						    NRF_SAADC_BURST_DISABLED);
+#elif defined(NRF_SAADC_HAS_BURST)
+			nrf_saadc_burst_set(NRF_SAADC,
+					    NRF_SAADC_BURST_DISABLED);
+#endif
 			nrf_saadc_channel_pos_input_set(
 				NRF_SAADC,
 				channel_id,

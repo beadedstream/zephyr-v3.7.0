@@ -1,0 +1,11 @@
+# Copyright (c) 2024 Nordic Semiconductor ASA
+# SPDX-License-Identifier: Apache-2.0
+#
+# Stub Kconfig for CMSIS 6 (hal/cmsis_6). The module provides ARM Cortex-M
+# core headers (SCB, SysTick, NVIC) with the SHPR[] spelling required by
+# Zephyr 3.7 arch/arm/core/cortex_m/scb.c. No user-visible Kconfig symbols
+# are needed here; the module inclusion is tracked via ZEPHYR_CMSIS_6_MODULE.
+
+config ZEPHYR_CMSIS_6_MODULE
+	bool
+	default y
